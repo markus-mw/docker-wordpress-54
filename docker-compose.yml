@@ -13,9 +13,10 @@ services:
       MYSQL_PASSWORD: wordpress
 
   wordpress:
+    #    image: wordpress:5.4
+    build: .
     depends_on:
       - db
-    image: wordpress:5.4
     ports:
       - "8000:80"
     restart: "no"
@@ -25,37 +26,17 @@ services:
       WORDPRESS_DB_PASSWORD: wordpress
       WORDPRESS_DB_NAME: wordpress
       WORDPRESS_DEBUG: 1
+      WP_TESTS_DB_NAME: wptests
+      WP_PLUGIN_FOLDER: commonsbooking
     volumes:
       - ./commonsbooking:/var/www/html/wp-content/plugins/commonsbooking
       - ./cb1:/var/www/html/wp-content/plugins/commons-booking
 
-#  db_cb1:
-#    image: mysql:5.7
-#    volumes:
-#      - db_data_cb1:/var/lib/mysql
-#    restart: "no"
-#    environment:
-#      MYSQL_ROOT_PASSWORD: somewordpress
-#      MYSQL_DATABASE: wordpress
-#      MYSQL_USER: wordpress
-#      MYSQL_PASSWORD: wordpress
-#
-#
-#  wordpress_cb1:
-#    depends_on:
-#      - db_cb1
-#    image: wordpress:5.4
-#    ports:
-#      - "8001:80"
-#    restart: "no"
-#    environment:
-#      WORDPRESS_DB_HOST: db_cb1:3306
-#      WORDPRESS_DB_USER: wordpress
-#      WORDPRESS_DB_PASSWORD: wordpress
-#      WORDPRESS_DB_NAME: wordpress
-#      WORDPRESS_DEBUG: 1
-#    volumes:
-#      - ./cb1:/var/www/html/wp-content/plugins/commons-booking
+  mailhog:
+    image: mailhog/mailhog
+    ports:
+      - 1025:1025 # smtp server
+      - 8025:8025 # web ui
+
 volumes:
   db_data:
-  db_data_cb1:
