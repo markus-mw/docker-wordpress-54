@@ -1,4 +1,4 @@
-FROM wordpress:5.4
+FROM wordpress:5.4.2-php7.4-apache
 
 #2. Install WP-cli and dependencies to run it
 RUN apt-get update \
@@ -9,6 +9,17 @@ RUN apt-get update \
       default-mysql-client-core \
     && curl https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar -o /usr/local/bin/wp \
     && chmod +x /usr/local/bin/wp
+
+# Install all mailhog
+RUN apt-get install --no-install-recommends --assume-yes --quiet ca-certificates curl git &&\
+    rm -rf /var/lib/apt/lists/*
+RUN curl -Lsf 'https://storage.googleapis.com/golang/go1.8.3.linux-amd64.tar.gz' | tar -C '/usr/local' -xvzf -
+ENV PATH /usr/local/go/bin:$PATH
+RUN go get github.com/mailhog/mhsendmail
+RUN cp /root/go/bin/mhsendmail /usr/bin/mhsendmail
+RUN echo 'sendmail_path = /usr/bin/mhsendmail --smtp-addr mailhog:1025' > /usr/local/etc/php/php.ini
+RUN echo 'sendmail_path = /usr/bin/mhsendmail --smtp-addr mailhog:1025' >> /usr/local/etc/php/php.ini-development
+RUN echo 'sendmail_path = /usr/bin/mhsendmail --smtp-addr mailhog:1025' >> /usr/local/etc/php/php.ini-production
 
 #3. Create the files for the testing environment
 RUN \
@@ -30,5 +41,6 @@ COPY init-testing-environment.sh /usr/local/bin/
 COPY install-wp-tests.sh /tmp/
 
 #5. Run the script and send as an argument the command to run the apache service
+ENTRYPOINT ["docker-entrypoint-wrapper.sh"]
 ENTRYPOINT ["init-testing-environment.sh"]
 CMD ["apache2-foreground"]
