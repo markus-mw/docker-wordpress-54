@@ -21,6 +21,19 @@ RUN echo 'sendmail_path = /usr/bin/mhsendmail --smtp-addr mailhog:1025' > /usr/l
 RUN echo 'sendmail_path = /usr/bin/mhsendmail --smtp-addr mailhog:1025' >> /usr/local/etc/php/php.ini-development
 RUN echo 'sendmail_path = /usr/bin/mhsendmail --smtp-addr mailhog:1025' >> /usr/local/etc/php/php.ini-production
 
+#Install xdebug
+RUN echo 'zend_extension=/usr/local/lib/php/extensions/no-debug-non-zts-20190902/xdebug.so' >> /usr/local/etc/php/php.ini
+RUN pecl install xdebug \
+    && docker-php-ext-enable xdebug \
+    && echo "xdebug.mode=debug" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini \
+    && echo "xdebug.client_host = host.docker.internal" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
+
+#Install kasimir theme
+RUN cd /var/www/html/wp-content/themes \
+    && curl -LO https://github.com/flegfleg/kasimir-theme/archive/refs/tags/1.04.tar.gz \
+    && tar -xvzf 1.04.tar.gz \
+    && mv kasimir-theme-1.04 kasimir
+
 #3. Create the files for the testing environment
 RUN \
     #3.1 Install phpunit
@@ -43,12 +56,5 @@ COPY install-wp-tests.sh /tmp/
 #5. Run the script and send as an argument the command to run the apache service
 ENTRYPOINT ["docker-entrypoint-wrapper.sh"]
 ENTRYPOINT ["init-testing-environment.sh"]
-
-#Install xdebug
-RUN echo 'zend_extension=/usr/local/lib/php/extensions/no-debug-non-zts-20190902/xdebug.so' > /usr/local/etc/php/php.ini
-RUN pecl install xdebug \
-    && docker-php-ext-enable xdebug \
-    && echo "xdebug.mode=debug" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini \
-    && echo "xdebug.client_host = host.docker.internal" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
 
 CMD ["apache2-foreground"]
