@@ -21,7 +21,7 @@ then
 	rm ./bin/install-wp-tests.sh
 	cp /tmp/install-wp-tests.sh ./bin/
 
-	sudo -u www-data -- bash -c "./bin/install-wp-tests.sh $WP_TESTS_DB_NAME $WORDPRESS_DB_USER $WORDPRESS_DB_PASSWORD $WORDPRESS_DB_HOST latest true"
+	sudo -u www-data -- bash -c "./bin/install-wp-tests.sh $WP_TESTS_DB_NAME $WORDPRESS_DB_USER $WORDPRESS_DB_PASSWORD $WORDPRESS_DB_HOST latest true true"
 fi
 
 #4. back to the root WP folder
