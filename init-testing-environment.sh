@@ -20,6 +20,7 @@ then
 	cd wp-content/plugins/$WP_PLUGIN_FOLDER
 	rm ./bin/install-wp-tests.sh
 	cp /tmp/install-wp-tests.sh ./bin/
+	cp /tmp/bootstrap.php ./tests/
 
 	sudo -u www-data -- bash -c "./bin/install-wp-tests.sh $WP_TESTS_DB_NAME $WORDPRESS_DB_USER $WORDPRESS_DB_PASSWORD $WORDPRESS_DB_HOST latest true true"
 fi

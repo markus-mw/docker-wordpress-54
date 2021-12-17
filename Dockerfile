@@ -52,6 +52,7 @@ RUN \
 #4. Copy the script to create the testing environment when the container is started
 COPY init-testing-environment.sh /usr/local/bin/
 COPY install-wp-tests.sh /tmp/
+COPY bootstrap.php /tmp/
 
 #5. Run the script and send as an argument the command to run the apache service
 ENTRYPOINT ["docker-entrypoint-wrapper.sh"]
