@@ -2,10 +2,11 @@
 
 cd /var/www/html/
 
-#1. check if wordpress is already installed/configured
-if (sudo -u www-data -- wp core is-installed)
-then
+sudo -u www-data -- wp core is-installed
 
+#1. check if wordpress is already installed/configured
+if [ $? -eq 0 ]; then
+  echo "core is installed"
 	#2. check if the database is ready
 	if ! (sudo -u www-data -- wp db check)
 	then
@@ -22,7 +23,9 @@ then
 	cp /tmp/install-wp-tests.sh ./bin/
 	cp /tmp/bootstrap.php ./tests/
 
-	sudo -u www-data -- bash -c "./bin/install-wp-tests.sh $WP_TESTS_DB_NAME $WORDPRESS_DB_USER $WORDPRESS_DB_PASSWORD $WORDPRESS_DB_HOST latest true true"
+	sudo -u www-data -- bash -c "./bin/install-wp-tests.sh $WP_TESTS_DB_NAME $WORDPRESS_DB_USER $WORDPRESS_DB_PASSWORD $WORDPRESS_DB_HOST 5.4.2 false true"
+else
+  echo "core is not installed"
 fi
 
 #4. back to the root WP folder

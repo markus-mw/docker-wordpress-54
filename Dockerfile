@@ -43,8 +43,8 @@ RUN \
     && cp -r /usr/src/wordpress /tmp/wordpress \
     && curl https://raw.github.com/markoheijnen/wp-mysqli/master/db.php -o /tmp/wordpress/wp-content/db.php \
     #3.3 Install the testing libraries
-    && svn co --quiet https://develop.svn.wordpress.org/tags/5.3.2/tests/phpunit/includes/ /tmp/wordpress-tests-lib/includes \
-    && svn co --quiet https://develop.svn.wordpress.org/tags/5.3.2/tests/phpunit/data/ /tmp/wordpress-tests-lib/data \
+    && svn co --quiet https://develop.svn.wordpress.org/tags/5.4.2/tests/phpunit/includes/ /tmp/wordpress-tests-lib/includes \
+    && svn co --quiet https://develop.svn.wordpress.org/tags/5.4.2/tests/phpunit/data/ /tmp/wordpress-tests-lib/data \
     #3.4 set owner and permissions
     && chown -R www-data:www-data /tmp/wordpress \
     && chown -R www-data:www-data /tmp/wordpress-tests-lib
